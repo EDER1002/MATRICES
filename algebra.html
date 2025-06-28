@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Magia Matricial Gótica</title>
+  <link href="https://fonts.googleapis.com/css2?family=MedievalSharp&family=UnifrakturCook&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --sangre: #8b0000;
+      --oro: #daa520;
+      --noche: #0a0a0a;
+    }
+
+    body {
+      background: var(--noche);
+      color: #d3d3d3;
+      font-family: 'MedievalSharp', cursive;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .castillo {
+      border: 3px solid var(--sangre);
+      padding: 20px;
+      margin: 20px 0;
+      border-radius: 10px;
+      background: #1a1a1a;
+      box-shadow: 0 0 20px rgba(139, 0, 0, 0.3);
+    }
+
+    .titulo-magico {
+      font-family: 'UnifrakturCook', cursive;
+      color: var(--oro);
+      text-align: center;
+      font-size: 2.5em;
+      text-shadow: 2px 2px 4px black;
+    }
+
+    input, button {
+      font-family: 'UnifrakturCook', cursive;
+      padding: 10px;
+      margin: 10px;
+      background: #2d2d2d;
+      color: var(--oro);
+      border: 2px solid var(--sangre);
+      border-radius: 5px;
+      font-size: 1.1em;
+    }
+
+    button {
+      background: linear-gradient(var(--sangre), #600000);
+      cursor: pointer;
+      transition: transform 0.3s;
+    }
+
+    button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 15px var(--sangre);
+    }
+
+    .libro-hechizos {
+      background: #121212;
+      padding: 20px;
+      border-radius: 10px;
+      border: 1px solid var(--oro);
+      white-space: pre-wrap;
+      font-family: monospace;
+      line-height: 1.6;
+      margin: 20px 0;
+    }
+
+    .explicacion-niños {
+      background: #1a1a1a;
+      padding: 15px;
+      border-left: 4px solid var(--sangre);
+      margin: 15px 0;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="castillo">
+    <h1 class="titulo-magico">📜 Hechizo Matricial Gótico 📜</h1>
+    <input type="text" id="mensaje" placeholder="Escribe tu mensaje mágico...">
+    <button onclick="lanzarHechizo()">✨ Revelar los Secretos ✨</button>
+  </div>
+
+  <div id="grimorio" class="castillo"></div>
+
+<script>
+const CLAVE_MAGICA = [[2, 3], [1, 4]];
+
+function lanzarHechizo() {
+  const mensaje = document.getElementById('mensaje').value.toUpperCase().replace(/[^A-Z]/g, "");
+  const grimorio = document.getElementById('grimorio');
+  grimorio.innerHTML = '';
+
+  if (!mensaje) {
+    grimorio.innerHTML = "<div class='explicacion-niños'>🧙♀️ ¡El pergamino está vacío! Escribe un mensaje mágico.</div>";
+    return;
+  }
+
+  let diario = "=== 🧙♂️ Diario del Hechizo Matricial 🧙♀️ ===\n\n";
+
+  // Paso 1
+  const mensajeAjustado = mensaje.length % 2 ? mensaje + 'X' : mensaje;
+  diario += `📜 Paso 1: Preparar el Pergamino\n`;
+  diario += `📖 En este paso, vamos a asegurarnos de que el mensaje tenga una cantidad par de letras. Si no, añadimos una 'X'.\n`;
+  diario += `   Mensaje original: ${mensaje}\n`;
+  diario += `   Mensaje ajustado: ${mensajeAjustado} (¡añadimos una 'X' si es necesario!)\n\n`;
+
+  // Paso 2
+  diario += `🔢 Paso 2: Traducir Letras a Números Mágicos\n`;
+  diario += `📖 Aquí transformamos cada letra en su número del alfabeto. A=0, B=1... Z=25\n`;
+  const numeros = mensajeAjustado.split('').map(letra => {
+    const num = letra.charCodeAt(0) - 65;
+    diario += `   ${letra} → ${num}\n`;
+    return num;
+  });
+  diario += `\n   Números mágicos: [${numeros.join(', ')}]\n\n`;
+
+  // Paso 3
+  diario += `🧮 Paso 3: Crear la Llave Mágica Inversa (¡Matriz Inversa!)\n`;
+  diario += `📖 Vamos a construir una matriz inversa para poder revertir el hechizo de cifrado más adelante.\n\n`;
+
+  const [a, b] = CLAVE_MAGICA[0];
+  const [c, d] = CLAVE_MAGICA[1];
+
+  // Paso 3.1
+  const determinante = (a * d) - (b * c);
+  diario += `🧮 Paso 3.1: Determinante (la llave maestra)\n`;
+  diario += `📖 El determinante nos dice si podemos invertir la matriz. Si es 0, ¡el hechizo falla!\n`;
+  diario += `   (${a} × ${d}) - (${b} × ${c}) = ${determinante}\n\n`;
+
+  // Paso 3.2
+  diario += `🔄 Paso 3.2: Crear la Matriz del Espejo\n`;
+  diario += `📖 Intercambiamos la esquina superior izquierda con la inferior derecha y negamos las otras dos.\n`;
+  diario += `   Intercambiamos ${a} y ${d} → ${d} y ${a}\n`;
+  diario += `   Negamos ${b} y ${c} → ${-b} y ${-c}\n`;
+  diario += `   Nueva matriz: [${d}, ${-b}], [${-c}, ${a}]\n\n`;
+
+  // Paso 3.3
+  const pocion = 1 / determinante;
+  diario += `🥣 Paso 3.3: Multiplicamos por la poción (1/det)\n`;
+  diario += `📖 Reducimos la matriz dividiendo todo por el determinante: 1 ÷ ${determinante} = ${pocion.toFixed(2)}\n\n`;
+
+  // Paso 3.4
+  const matrizInversa = [
+    [(d * pocion).toFixed(2), (b * -pocion).toFixed(2)],
+    [(c * -pocion).toFixed(2), (a * pocion).toFixed(2)]
+  ];
+  diario += `✨ Paso 3.4: Nuestra Matriz Inversa Final es:\n`;
+  diario += `📖 Ya tenemos la herramienta para deshacer el hechizo más adelante.\n`;
+  diario += `   [${matrizInversa[0].join(', ')}]\n`;
+  diario += `   [${matrizInversa[1].join(', ')}]\n\n`;
+
+  // Paso 4
+  diario += `🔐 Paso 4: Cifrar el Mensaje\n`;
+  diario += `📖 Vamos a aplicar la matriz mágica original sobre pares de números para ocultar el mensaje.\n`;
+  let codificado = [];
+  for (let i = 0; i < numeros.length; i += 2) {
+    const par = [numeros[i], numeros[i + 1]];
+    const resultado = [
+      CLAVE_MAGICA[0][0] * par[0] + CLAVE_MAGICA[0][1] * par[1],
+      CLAVE_MAGICA[1][0] * par[0] + CLAVE_MAGICA[1][1] * par[1]
+    ];
+    diario += `\n   Par ${mensajeAjustado[i]}${mensajeAjustado[i+1]} [${par}]:\n`;
+    diario += `      🧮 ${CLAVE_MAGICA[0][0]}×${par[0]} + ${CLAVE_MAGICA[0][1]}×${par[1]} = ${resultado[0]}\n`;
+    diario += `      🧮 ${CLAVE_MAGICA[1][0]}×${par[0]} + ${CLAVE_MAGICA[1][1]}×${par[1]} = ${resultado[1]}\n`;
+    codificado.push(...resultado);
+  }
+  diario += `\n   Mensaje Cifrado: [${codificado.join(', ')}]\n\n`;
+
+  // Paso 5
+  diario += `🔓 Paso 5: Descifrar el Mensaje\n`;
+  diario += `📖 Por último, aplicamos la matriz inversa para recuperar los números originales y reconstruir el mensaje.\n`;
+  let descifrado = [];
+  for (let i = 0; i < codificado.length; i += 2) {
+    const par = [codificado[i], codificado[i + 1]];
+    const x = (par[0] * matrizInversa[0][0]) + (par[1] * matrizInversa[0][1]);
+    const y = (par[0] * matrizInversa[1][0]) + (par[1] * matrizInversa[1][1]);
+    diario += `\n   Par [${par}]:\n`;
+    diario += `      ✨ ${par[0]}×${matrizInversa[0][0]} + ${par[1]}×${matrizInversa[0][1]} = ${x.toFixed(2)} → ${Math.round(x)}\n`;
+    diario += `      ✨ ${par[0]}×${matrizInversa[1][0]} + ${par[1]}×${matrizInversa[1][1]} = ${y.toFixed(2)} → ${Math.round(y)}\n`;
+    descifrado.push(Math.round(x), Math.round(y));
+  }
+  const mensajeFinal = descifrado.map(n => String.fromCharCode(n + 65)).join('');
+  diario += `\n🎉 Mensaje Final: ${mensajeFinal}`;
+
+  grimorio.innerHTML = `<div class="libro-hechizos">${diario}</div>`;
+}
+</script>
+
+</body>
+</html>
